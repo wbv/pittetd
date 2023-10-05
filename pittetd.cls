@@ -15,7 +15,7 @@
 %% v1.9 notes: removed indent for List of Tables and List of Figures; changed font size for title to match Word template sizing.
 %% v1.10 notes: Removed setting from the subsubsection to allow a break after the heading, so that the text starts on a new line. 
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{pittetd}[12/3/2020 v1.10]
+\ProvidesClass{pittetd}[5/5/2022 v1.11]
 \newwrite\@etdaux
 \newif\if@errors
 \newif\if@keywords
@@ -564,7 +564,7 @@
     \fi\@disable{preface}}
 \def\prepare@bookmarks#1{%
     \def\@prelim{#1}%
-    \def\numberline##1{##1. }
+    \def\numberline##1{##1 }
     \let\\\relax
     \def\contentsline##1##2##3##4{%
        \pdfstringdef\@tempcsa{##2}%

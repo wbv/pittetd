@@ -3,7 +3,7 @@
 %==========================================================================================%
 %OPTIONS THAT ARE WORKING IN THE "\DOCUMENTCLASS" DEFINITION
 %==========================================================================================%
-
+%2022 version 1.11
 
 
 % Include the desired options in the '[pdftex,]' definition (e.g., '[pdftex,ma,10pt]')
@@ -41,6 +41,12 @@
 %==========================================================================================%
 %OPTIONAL PACKAGES FOR THE DOCUMENT
 %==========================================================================================%
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@caption}{\csname the#1\endcsname}{\csname fnum@#1\endcsname:}{}{}
+\renewcommand*\l@figure{\@dottedtocline{1}{1.5em}{4.5em}} % default for 3rd arg: 2.3em
+\let\l@table\l@figure % as in article.cls
+\makeatother
 
 % Change '\usepackage' with '\usewithpatch' if patches of the package are used
 % Package to include figures in the document
@@ -53,6 +59,9 @@
 % Patches for the packages 'amsmath' and 'amsthm'
 \patch{amsmath}
 \patch{amsthm}
+
+
+
 \makeatletter
 \renewcommand{\@biblabel}[1]{[#1]\hfill}
 \makeatother
@@ -61,6 +70,8 @@
       \hangindent 0pt%\wd\@tempboxa
       \noindent\box\@tempboxa}
 \makeatother
+
+
 % Change Figure and Table Numeration
 %\chapterfloats %Uncomment this to get figures and tables numbered within chapters.
 %==========================================================================================%
@@ -216,7 +227,9 @@ This document is a sample file for the creation of ETD's at Pitt through \LaTeX.
 % Comment (Use the '%' character) to omit
 
 % List of Figures
-\listoffigures                
+
+\listoffigures
+             
 % Comment (Use the '%' character) to omit
 
 
