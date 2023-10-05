@@ -115,7 +115,7 @@
 \let\Small\footnotesize
 \let\SMALL\scriptsize
 \let\bibindent\parindent
-\linespread{2}
+\linespread{1.5}
 \normalfont
 \setlength\@chapterl{1.5em}
 \setlength\@sectionl{1.5em}
@@ -136,7 +136,7 @@
 \newcommand\convname{Conventions}
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
-\newcommand\@pnumwidth{1.2em}
+\newcommand\@pnumwidth{1.8em}
 \newcommand\@tocrmarg{2em}
 \newcommand\@dotsep{1.2}
 \InputIfFileExists{\jobname.etd}{}{%
