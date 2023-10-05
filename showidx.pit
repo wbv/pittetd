@@ -1,3 +1,14 @@
+%%
+%% This is file `showidx.pit',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% pittetd.dtx  (with options: `showidx')
+%% The `pittetd' project: Electronic Theses and Dissertations
+%%                        at the University of Pittsburgh.
+%% Copyright 2003-2004 Federico Garcia and Pitt ETD Working Group
+%% Copyright 2020-2023 Walter Vaugan and Pitt ULS ETD Support
 \makeatletter
 \@ifundefined{showidx@patch}{\relax}{\endinput}
 \setlength\marginparwidth{2in}
@@ -5,4 +16,5 @@
 \let\showidx@patch\@empty
 \makeatother
 \endinput
-
+%%
+%% End of file `showidx.pit'.

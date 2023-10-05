@@ -7,15 +7,12 @@
 %% pittetd.dtx  (with options: `class')
 %% The `pittetd' project: Electronic Theses and Dissertations
 %%                        at the University of Pittsburgh.
-%% 
-%% Copyright 2003 Federico Garcia and Pitt ETD Working Group
-%% Version 1.9 edited 2020 ULS ETD Support
-%% 
-%% v1.8 notes: added biblabel adjustment to Bibliography to allow numbers to left align; added raggedbottom command to preamble.
-%% v1.9 notes: removed indent for List of Tables and List of Figures; changed font size for title to match Word template sizing.
-%% v1.10 notes: Removed setting from the subsubsection to allow a break after the heading, so that the text starts on a new line. 
-\NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{pittetd}[5/5/2022 v1.11]
+%% Copyright 2003-2004 Federico Garcia and Pitt ETD Working Group
+%% Copyright 2020-2023 Walter Vaugan and Pitt ULS ETD Support
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{pittetd}[2023/10/05 v1.13
+    University of Pittsburgh ETD
+    (Electronic Thesis & Dissertations) class]
 \newwrite\@etdaux
 \newif\if@errors
 \newif\if@keywords
@@ -74,6 +71,11 @@
     \renewcommand\@@@degree{PhD}%
     \def\@degreesought{\textbf{Doctor of Philosophy}}%
     \def\@advisor{Director}}
+\DeclareOption{phdprospectus}{\renewcommand{\t@or@d}{phdprospectus}%
+    \renewcommand\@this{Prospectus}%
+    \renewcommand\@@@degree{PhD}%
+    \def\@degreesought{\textbf{Doctor of Philosophy}}%
+    \def\@advisor{Director}}
 \DeclareOption{ma}{\renewcommand{\t@or@d}{ma}%
     \renewcommand\@this{Thesis}%
     \renewcommand\@@@degree{M.A.}%
@@ -107,10 +109,13 @@
 \newcommand\@nolinemessage[2]{\if@errors
     \ClassError{pittetd}{#1}{#2}\else
     \ClassWarningNoLine{pittetd}{#1}\fi}
-\input{pitetd1\@ptsize.clo}
+\input{size1\@ptsize.clo}
+\setlength{\@singleline}{24\p@}
+\newcommand\singlespace{\@setfontsize\singlespace\@xiipt{14.5}}
 \let\Small\footnotesize
 \let\SMALL\scriptsize
 \let\bibindent\parindent
+\linespread{2}
 \normalfont
 \setlength\@chapterl{1.5em}
 \setlength\@sectionl{1.5em}
@@ -125,16 +130,15 @@
 \newcommand\indexname{Index}
 \newcommand\figurename{Figure}
 \newcommand\tablename{Table}
-%%\newcommand\equationname{Equation}
 \newcommand\chaptername{Chapter}
 \newcommand\appendixname{Appendix}
 \newcommand\abstractname{}
 \newcommand\convname{Conventions}
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
-\newcommand\@pnumwidth{1.55em}
-\newcommand\@tocrmarg{2.55em}
-\newcommand\@dotsep{4.5}
+\newcommand\@pnumwidth{1.2em}
+\newcommand\@tocrmarg{2em}
+\newcommand\@dotsep{1.2}
 \InputIfFileExists{\jobname.etd}{}{%
     \if@errors
         \ClassWarningNoLine{pittetd}{%
@@ -163,9 +167,6 @@
 \skip\@mpfootins=\skip\footins
 \setlength\fboxsep{3\p@}
 \setlength\fboxrule{.4\p@}
-%%\@addtoreset{equation}{chapter}
-%%\renewcommand\theequation{\ifnum \c@chapter>\z@
-%%    \thechapter.\fi\@arabic\c@equation}
 \pagestyle{plain}
 \pagenumbering{roman}
 \setcounter{footnote}{0}
@@ -275,6 +276,10 @@
 \setlength{\intextsep}{.5\@singleline \@plus \z@ \@minus 10.2\p@}
 \setlength\abovecaptionskip{\@singleline}
 \setlength\belowcaptionskip{\@singleline}
+\raggedbottom
+\widowpenalties=4 99999 99999 99999 150
+\displaywidowpenalties=4 99999 99999 99999 150
+\clubpenalties=3 99999 99999 150
 \DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
 \DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
 \DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
@@ -307,14 +312,16 @@
     \newcommand\acro[1]{\textSMC{#1}\@}}{}
 \if@hyper@ref
     \AtEndOfClass{%
-        \usepackage[hyperindex=true]{hyperref}%
+        \usepackage[hyperindex=false]{hyperref}%
         \def\@pdfcreator{LaTeX, pittetd class, hyperref package}}
     \AtBeginDocument{%
-        \hypersetup{bookmarksnumbered=true,%
-          bookmarksopen=true,%
-          linktoc=all,%
-            linkcolor=blue,citecolor=blue,urlcolor=blue,%
-            pdftitle=\@pdftitle,pdfauthor=\@author,%
+        \hypersetup{%
+            bookmarksnumbered=true,%
+            bookmarksopen=true,%
+            linktoc=all,%
+            hidelinks,%
+            pdftitle=\@pdftitle,%
+            pdfauthor=\@author,%
             pdfkeywords=\@keywords,%
             pdfsubject=\the\subject}}
 \fi
@@ -347,7 +354,7 @@
   December\fi\space\number\day, \number\year}
 \date{\today}
 \edef\@year{\number\year}
-\renewcommand{\year}[1]{%
+\newcommand{\setyear}[1]{%
     \gdef\@year{#1}\@yeargiventrue}
 \newcommand\@degree{\@nolinemessage{No \string\degree\space
     command}{It is required to list the author's previous
@@ -401,7 +408,7 @@
         \if@yeargiven\else
             \ClassWarningNoLine{pittetd}{%
                 I assumed `\@year' for the year.
-                You can use \string\year\space to change it}%
+                You can use \string\setyear\space to change it}%
         \fi
     \fi
     \@ifundefined{@outlinefile}{}{%
@@ -411,8 +418,6 @@
             [0][]{prelim.0}{Title Page}{}}}
     \thispagestyle{empty}%
     {\centering
-        \fontsize\@xiipt{1.5\@singleline}\selectfont
-
         {\bfseries\expandafter{\@title}}\par
         \vfill
         by\par
@@ -445,12 +450,11 @@
                 [0][]{prelim.1}{Committee Membership Page}{}}}
         \@committee\expandafter{\the\@committee\relax}%
         {\centering
-        \normalsize\fontsize\f@size{1.3\@singleline}\selectfont
         UNIVERSITY OF PITTSBURGH\par
         \@@school\par
         \vfill
         This \lowercase\expandafter{\@this} was presented\\
-        by\\[.67\@singleline]\@author\\[.67\@singleline]
+        by\\[\@singleline]\textbf{\@author}\\[\@singleline]
         \if@dategiven
             It was defended on\\
             \@date\\ \else\ClassWarningNoLine{pittetd}{%
@@ -467,8 +471,6 @@
             must be included. For the moment, I will typeset only
             the advisor.}\fi
             \vfill\fi
-        %%\@this\ \@advisor: \the\@committee\the\@coadv
-        %%Uncomment the above if a coadvisor is required
         \vfill
         \newpage}
         \renewcommand\committeemember[1]{\ClassError{pittetd}{%
@@ -494,20 +496,18 @@
     \@enable{abstract}{\begin{abstract}}}
 \newenvironment{abstract}[1][\@empty]
     {\ifx\@empty#1\else\@keywordstrue\def\@tempcsa{#1}\fi
-    \clearpage\@abstractmessage
-     
+    \clearpage\@abstractmessage\par
     \typeout{Abstract}%
     \@ifundefined{@outlinefile}{}{%
         \hypertarget{prelim.2}{}%
         \protected@write\@outlinefile{}{%
             \protect\BOOKMARK
-            [0][]{prelim.2}{Abstract}{}}}
-
+            [0][]{prelim.2}{Abstract}{}}}\par
     {\centering\normalfont
-        {\bfseries\expandafter{\@title}}\\[.3\@singleline]
-        \@author, \@@@degree\\[.3\@singleline]
+        {\bfseries\expandafter{\@title}}\\
+        \@author, \@@@degree\\
         University of Pittsburgh, \@year\par}
-    \par\vspace{1\@singleline}\@afterheading}%
+    \par\vspace{2\@singleline}\@afterheading}%
     {\if@keywords
         \medskip\begin{description}\item[\@tempcsa]\@keywords
         {\normalsfcodes\ifnum\spacefactor=\sfcode`.\else.\fi}
@@ -516,21 +516,20 @@
     \newpage\@enable{table}{\tableofcontents}}
 \newenvironment{abstract*}[1][\@empty]
     {\ifx\@empty#1\else\@keywordstrue\def\@tempcsa{#1}\fi
-    \clearpage\@abstractmessage
-     
+    \clearpage\@abstractmessage\par
     \typeout{Abstract}%
     \@ifundefined{@outlinefile}{}{%
         \hypertarget{prelim.2}{}%
         \protected@write\@outlinefile{}{%
             \protect\BOOKMARK
-            [0][]{prelim.2}{ABSTRACT}{}}}
-  
+            [0][]{prelim.2}{Abstract}{}}}
+    \par
     {\centering\normalfont
-        {\bfseries Abstract\\[.3\@singleline]
-        \expandafter{\@title}}\\[.3\@singleline]
-        \@author, \@@@degree\\[.3\@singleline]
+        {\bfseries Abstract\\
+        \expandafter{\@title}}\\
+        \@author, \@@@degree\\
         University of Pittsburgh, \@year\par}
-    \par\vspace{1\@singleline}\@afterheading}%
+    \par\vspace{2\@singleline}\@afterheading}%
     {\if@keywords
         \medskip\begin{description}\item[\@tempcsa]\@keywords
         {\normalsfcodes\ifnum\spacefactor=\sfcode`.\else.\fi}
@@ -545,7 +544,7 @@
             \protect\BOOKMARK
             [0][]{prelim.4}{Table of Contents}{}}
     }
-    
+    \par
     {\normalfont\bfseries\centering
         Table of Contents\par}
     \par\vspace{54\p@}%
@@ -582,7 +581,7 @@
             \protect\prepare@bookmarks5
             \protect\@input{\jobname.lot}
             \protect\endgroup}}
-       {\normalfont\bfseries\centering
+    {\normalfont\bfseries\centering
         List of Tables\par}
     \par\vspace{54\p@}%
     \@starttoc{lot}%
@@ -591,14 +590,13 @@
         \@enable{preface}{the first chapter}%
         \@enable{conv}{the first chapter}%
     \fi}
-\newcommand*\l@table{\@dottedtocline{1}{0em}{2.5em}}
-%%You can change the final value above to be 3em if the chapter numbers are too wide for the list.
+\newcommand*\l@table{\@dottedtocline{1}{1em}{\@floatl}}
 \newcommand\listoffigures{\clearpage\@lofmessage
     \typeout{List of Figures}%
     \@ifundefined{@outlinefile}{}{%
         \hypertarget{prelim.6}{}%
         \protected@write\@outlinefile{}{%
-           \protect\BOOKMARK
+            \protect\BOOKMARK
             [0][]{prelim.6}{List of Figures}{}%
             \protect\begingroup\protect\makeatletter
             \protect\prepare@bookmarks6
@@ -611,11 +609,8 @@
     \@enable{preface}{the first chapter}%
     \@disable{lot}}
 \let\l@figure\l@table
-%%\newcommand*\l@equation{\@dottedtoclin{1}{0em}{\@floatl}}
-
-    \newcommand\preface{%
-    \clearpage\@prefacemessage
-     
+\newcommand\preface{%
+    \clearpage\@prefacemessage\par
     \typeout{Preface}%
     \phantomsection
     \addcontentsline{toc}{chapter}{\bfseries Preface}
@@ -625,7 +620,7 @@
     \@enable{conv}{the first chapter}%
     \@afterheading}
 \newcommand\preliminarychapter[1]{%
-    \clearpage 
+    \clearpage
     \typeout{#1}
     \@ifundefined{@outlinefile}{}{%
         \hypertarget{prelim.\the\c@@addprel}{}%
@@ -640,7 +635,6 @@
 \def\@startsection#1#2#3#4#5#6{%
     \if@noskipsec \leavevmode \fi
     \par
-     
     \@tempskipa #4\relax
     \@tempskipa -\@tempskipa
     \if@nobreak
@@ -661,7 +655,6 @@
         \@getlength{##1}%
         \if@noskipsec \leavevmode \fi
         \par
-         
         \@tempskipa ##4\relax
         \@tempskipa -\@tempskipa
         \if@nobreak
@@ -677,7 +670,7 @@
             \@dblarg{\@sect{##1}{##2}{##3}{##4}{##5}{##6}}}%
             {\@dblarg{\@sect{##1}{##2}{##3}{##4}{##5}{##6}}}}%
     \renewcommand\chapter{\clearpage\global\@topnum\z@
-         
+        \par
         \@ifstar{%
             \ClassWarning{pittetd}{Starred
                 \string\chapter*\space has been treated as
@@ -704,7 +697,7 @@
     {.5\@singleline \@plus .2ex}%
     {\@withperiod\@withgobble\normalfont\expandafter\bfseries}}
 \newcommand\subsubsection{\@startsection{subsubsection}%
-    {3}{\z@}{-1\@singleline\@plus -1ex \@minus -.2ex}%
+    {3}{\z@}{-1\@singleline \@plus -1ex \@minus -.2ex}%
     {1em}{\@withperiod\@withgobble
         \normalfont\expandafter\bfseries}}
 \let\part\@gobble
@@ -752,7 +745,7 @@
     \typeout{Appendix\thechapter}%
     {\@@appendix{#1}}%
     {\normalfont\bfseries\centering
-           Appendix\thechapter\space\expandafter{#2}\par}
+        Appendix\thechapter\space\expandafter{#2}\par}
     \par\vspace{2\@singleline}\@afterheading}
 \def\@@appendix#1{\addcontentsline{toc}{chapter}{%
     {\bfseries Appendix\thechapter. #1}}}
@@ -822,7 +815,7 @@
 \setlength\leftmarginiv{1.7em}
 \setlength\leftmarginv{1em}
 \setlength\leftmarginvi{1em}
-\setlength\labelsep{1 em}
+\setlength\labelsep{1em}
 \setlength\labelwidth{\leftmargini}
 \addtolength\labelwidth{-\labelsep}
 \setlength\partopsep{\@ptsize\p@ \@plus 1\p@ \@minus 1\p@}
@@ -930,7 +923,8 @@
     \@ifundefined{@outlinefile}{}{\phantomsection}%
     \addcontentsline{toc}{chapter}{{\bfseries\protect\bibname}}%
     {\normalfont\bfseries\centering\bibname\par}%
-    \par\vspace{2\@singleline}%
+    \par\vspace{\@singleline}%
+    \linespread{1.1}%
     \singlespace
     \let\@listi\@listI
     \setlength{\itemsep}{1\@singleline \@plus 4\p@}%
@@ -978,7 +972,7 @@
     \immediate\write\@etdaux{%
       \string\setlength{\string\@subsubsectionl}{\the\@subsubsectionl}}
     \immediate\write\@etdaux{%
-    \string\setlength{\string\@floatl}{\the\@floatl}}
+      \string\setlength{\string\@floatl}{\the\@floatl}}
     \immediate\closeout\@etdaux}
 \endinput
 %%
