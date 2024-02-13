@@ -50,3 +50,10 @@ sure you:
    *Do not edit `pittetd.cls` or `.pit` files directly.*
 2. Demonstrate your changes' needs or effects by adding a working example to
    `an-etd.tex` or add a new `*.tex` document demonstrating your feature/fix.
+
+If you use TexLive, you can generate the class and documentation with latexmk:
+
+```bash
+latexmk pittetd.ins
+latexmk -f -pdf pittetd.dtx
+```
