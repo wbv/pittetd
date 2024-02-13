@@ -2,7 +2,7 @@
 %
 % pittetd - University of Pittsburgh ETD (Electronic Theses and Dissertations) LaTeX class
 % Copyright 2003-2004 Federico Garcia (feg8@pitt.edu)
-% Copyright 2020-2023 University Library System, University of Pittsburgh
+% Copyright 2020-2024 Walter Vaughan and University Library System, University of Pittsburgh
 % -------------------------------------------
 %
 % Changelog:
@@ -23,6 +23,8 @@
 % v1.13:
 %   Removed unused pitthesis/pittdiss patches, simplify spacing, remove custom font size class object
 %   files (pitetd1*.clo) in favor of base latex ones.
+% v1.14:
+%   Simplified bibliography spacing, font selection macros.
 %
 %
 % This program can be redistributed and/or modified under the terms
@@ -32,7 +34,7 @@
 %
 %<*driver>
 % \fi
-\ProvidesFile{pittetd.dtx}[2023/10/05 v1.13]
+\ProvidesFile{pittetd.dtx}[2024/02/13 v1.14]
 % \iffalse
 \documentclass[11pt]{ltxdoc}
 \usepackage{array}
@@ -47,7 +49,8 @@
   \thanks{University of Pittsburgh,
     Electronic Theses and Dissertations (ETD) Working Group.
     Maintained by University of Pittsburgh University Library Services,
-    Electronic Thesis and Dissertation Support}}
+    Electronic Thesis and Dissertation Support.
+    Additional contributions from Walter Vaughan.}}
 \setcounter{IndexColumns}{2}
 \IndexPrologue{\section*{Index}\addcontentsline{toc}{section}{Index} Numbers written in italics refer to the page where the corresponding entry is described. A list of mentioned packages is found under `packages mentioned;' of environments under `environments;' of \pittetd options under `options to \pittetd.'}
 \CodelineIndex
@@ -662,7 +665,7 @@
 %    \begin{macrocode}
 %<*class>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{pittetd}[2023/10/05 v1.13
+\ProvidesClass{pittetd}[2024/02/13 v1.14
     University of Pittsburgh ETD
     (Electronic Thesis & Dissertations) class]
 %    \end{macrocode}
@@ -812,8 +815,8 @@
 %The right size file from base \LaTeX is loaded next. For all sizes, the following |\let|'s are true.
 %    \begin{macrocode}
 \input{size1\@ptsize.clo}
-\setlength{\@singleline}{24\p@}
-\newcommand\singlespace{\@setfontsize\singlespace\@xiipt{14.5}}
+\setlength{\@singleline}{\abovedisplayskip}
+\def\singlespace{\renewcommand{\baselinestretch}{1}\selectfont}
 \let\Small\footnotesize
 \let\SMALL\scriptsize
 \let\bibindent\parindent
@@ -1611,7 +1614,7 @@
 %</acronym>
 %    \end{macrocode}
 %
-%The \textsf{showidx} patch increases the sizes of |\marginpar| and |\marginparsep|:
+%For \textsf{showidx}:
 %    \begin{macrocode}
 %<*showidx>
 \makeatletter
@@ -1821,6 +1824,7 @@
 \def\fnum@figure{Figure\nobreakspace\thefigure}
 \newenvironment{figure}
     {\global\@figurestrue
+        \bigskip\par
         \singlespace\@float{figure}}{%
         \end@float
         \settowidth\@tempskipa{%
@@ -1830,6 +1834,7 @@
         \fi}
 \newenvironment{figure*}
     {\global\@figurestrue
+        \bigskip\par
         \singlespace\@dblfloat{figure}}{%
         \end@dblfloat
         \settowidth\@tempskipa{%
@@ -1993,7 +1998,8 @@
     \clubpenalty4000
     \@clubpenalty \clubpenalty
     \widowpenalty4000%
-    \sfcode`\.\@m}
+    \sfcode`\.\@m
+    \singlespace}
     {\def\@noitemerr{\@latex@warning{Empty
         `thebibliography' environment}}%
     \endlist}
@@ -2011,7 +2017,6 @@
     \addcontentsline{toc}{chapter}{{\bfseries\protect\bibname}}%
     {\normalfont\bfseries\centering\bibname\par}%
     \par\vspace{\@singleline}%
-    \linespread{1.1}%
     \singlespace
     \let\@listi\@listI
     \setlength{\itemsep}{1\@singleline \@plus 4\p@}%
@@ -2032,7 +2037,7 @@
 %The |natbib| package handles the spacing not with |\itemsep|, but with the new |\bibsep|. As far as I know, this is the only thing we need to make the package work, so it is done here rather than in a patch.
 %    \begin{macrocode}
 \AtBeginDocument{\@ifundefined{bibsep}{}{%
-    \setlength{\bibsep}{.5\@singleline \@plus 4\p@}}}
+\setlength{\bibsep}{\itemsep}}}
 %    \end{macrocode}
 %
 %Support for the |achicago| package, on the contrary, goes to a patch:

@@ -1,0 +1,11 @@
+# ignore pdflatex and latexmk intermediate build products
+*.aux
+*.fls
+*.hd
+*.idx
+*.ilg
+*.ind
+*.log
+*.out
+*.toc
+*.fdb_latexmk

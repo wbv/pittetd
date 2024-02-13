@@ -8,9 +8,9 @@
 %% The `pittetd' project: Electronic Theses and Dissertations
 %%                        at the University of Pittsburgh.
 %% Copyright 2003-2004 Federico Garcia and Pitt ETD Working Group
-%% Copyright 2020-2023 Walter Vaugan and Pitt ULS ETD Support
+%% Copyright 2020-2024 Walter Vaughan and University Library System, University of Pittsburgh
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{pittetd}[2023/10/05 v1.13
+\ProvidesClass{pittetd}[2024/02/13 v1.14
     University of Pittsburgh ETD
     (Electronic Thesis & Dissertations) class]
 \newwrite\@etdaux
@@ -110,8 +110,8 @@
     \ClassError{pittetd}{#1}{#2}\else
     \ClassWarningNoLine{pittetd}{#1}\fi}
 \input{size1\@ptsize.clo}
-\setlength{\@singleline}{24\p@}
-\newcommand\singlespace{\@setfontsize\singlespace\@xiipt{14.5}}
+\setlength{\@singleline}{\abovedisplayskip}
+\def\singlespace{\renewcommand{\baselinestretch}{1}\selectfont}
 \let\Small\footnotesize
 \let\SMALL\scriptsize
 \let\bibindent\parindent
@@ -780,6 +780,7 @@
 \def\fnum@figure{Figure\nobreakspace\thefigure}
 \newenvironment{figure}
     {\global\@figurestrue
+        \bigskip\par
         \singlespace\@float{figure}}{%
         \end@float
         \settowidth\@tempskipa{%
@@ -789,6 +790,7 @@
         \fi}
 \newenvironment{figure*}
     {\global\@figurestrue
+        \bigskip\par
         \singlespace\@dblfloat{figure}}{%
         \end@dblfloat
         \settowidth\@tempskipa{%
@@ -910,7 +912,8 @@
     \clubpenalty4000
     \@clubpenalty \clubpenalty
     \widowpenalty4000%
-    \sfcode`\.\@m}
+    \sfcode`\.\@m
+    \singlespace}
     {\def\@noitemerr{\@latex@warning{Empty
         `thebibliography' environment}}%
     \endlist}
@@ -924,7 +927,6 @@
     \addcontentsline{toc}{chapter}{{\bfseries\protect\bibname}}%
     {\normalfont\bfseries\centering\bibname\par}%
     \par\vspace{\@singleline}%
-    \linespread{1.1}%
     \singlespace
     \let\@listi\@listI
     \setlength{\itemsep}{1\@singleline \@plus 4\p@}%
@@ -937,7 +939,7 @@
 \newcommand\safebibliography{\@safebibliography\bibliography}
 \newcommand\newblock{\hskip .11em\@plus.33em\@minus.07em}
 \AtBeginDocument{\@ifundefined{bibsep}{}{%
-    \setlength{\bibsep}{.5\@singleline \@plus 4\p@}}}
+\setlength{\bibsep}{\itemsep}}}
 \newenvironment{theindex}{%
     \clearpage\typeout{\indexname}%
     \@ifundefined{@outlinefile}{}{\phantomsection}%
